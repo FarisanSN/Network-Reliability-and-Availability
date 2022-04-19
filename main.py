@@ -23,21 +23,42 @@ def init_relia():
         print("Variable Rtu dan/atau Riu tidak valid")
         init_relia()
 
+def init_delivery():
+    global send, receive
+    receive = float(input("Time received the message: "))
+    send = float(input("Time sends the message: "))
+
+    if send<0 or receive<0 or send>receive:
+        print("Masukan salah")
+        init_delivery()
+
+def init_nonacces():
+    global unsucces, allatt
+    unsucces = int(input("Unsuccesful message attempts: "))
+    allatt = int(input("All message attempts: "))
+    
+    if unsucces<0 or allatt<0 or allatt<unsucces:
+        print("Masukan salah")
+        init_nonacces()
+
+
 def mode_select():
     global mode
     print("Masukkan Mode Kalkulator")
     print("1. Availability")
     print("2. Reliability")
-    print("please input 1 or 2")
+    print("3. End-to-end delivery time")
+    print("4. Message Service Non-accessibility")
+    print("please input 1, 2, 3 or 4")
     mode = int(input())
 
-    if mode!=1 and mode!=2:
+    if mode!=1 and mode!=2 and mode!=3 and mode!=4:
         print("Masukan salah")
         mode_select()
 
 def main():
     mode_select()
-    if mode ==1:
+    if mode==1:
         init_avail()
 
         global dt, availability, qual_avail
@@ -57,7 +78,7 @@ def main():
         
         print("Availability: ", availability, "%")
         print("Quality: ", qual_avail)
-    else:
+    if mode==2:
         init_relia()
 
         global oec, ho, trans_time, te, qual_relia
@@ -82,5 +103,46 @@ def main():
         print("Transaction Time: ", trans_time)
         print("Throughput Efficiency: ", te)
         print("Quality: ", qual_relia)
+
+    if mode==3:
+        init_delivery()
+
+        global delivery_time, qual_delivery
+        delivery_time = receive - send
+
+        if delivery_time<=5:
+            qual_delivery = "Very Good"
+        elif 5<delivery_time<=10:
+            qual_delivery = "Fairly Good"
+        elif 10<delivery_time<=30:
+            qual_delivery = "Enough"
+        elif 30<delivery_time<=60:
+            qual_delivery = "Bad"
+        else:
+            qual_delivery = "Poor"
+
+        print("Message end-to-end Delivery Time in seconds: ", delivery_time)
+        print("Quality: ", qual_delivery)
+
+    else: #mode==4
+        init_nonacces()
+
+        global non_access, qual_nonaccess
+
+        non_access = unsucces/allatt*100
+
+        if non_access<=1:
+            qual_nonaccess = "Very Good"
+        elif 1<non_access<=5:
+            qual_nonaccess = "Fairly Good"
+        elif 5<non_access<=15:
+            qual_nonaccess = "Enough"
+        elif 15<non_access<=30:
+            qual_nonaccess = "Bad"
+        else:
+            qual_nonaccess = "Poor"
+
+        print("Message Service Non-Accessibility (%): ",non_access,"%")
+        print("Quality: ", qual_nonaccess)
 
 main()
